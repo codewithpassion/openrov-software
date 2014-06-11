@@ -23,11 +23,6 @@ Settings settings;
   Cape cape;
 #endif
 
-#if(HAS_OROV_CONTROLLERBOARD_25)
-  #include "controllerboard25.h"
-  Controller25 controller;
-#endif
-
 #if(HAS_STD_LIGHTS)
   #include "Lights.h"
   Lights lights;
@@ -54,35 +49,6 @@ Settings settings;
 #endif
 
 
-
-#if(HAS_POLOLU_MINIMUV)
-  #define COMPASS_ENABLED 1
-  #define GYRO_ENABLED 1
-  #define ACCELEROMETER_ENABLED 1
-  #include "MinIMU9.h"
-  #include <Wire.h> //required to force the Arduino IDE to include the library in the path for the I2C code
-  MinIMU9 IMU;
-#endif
-
-#if(HAS_MPU9150)
-  #define COMPASS_ENABLED 1
-  #define GYRO_ENABLED 1
-  #define ACCELEROMETER_ENABLED 1
-  #include "MPU9150.h"
-  #include <Wire.h> //required to force the Arduino IDE to include the library in the path for the I2C code
-
-  MPU9150 IMU;
-#endif
-
-#if(HAS_MS5803_14BA)
-  #define DEAPTH_ENABLED 1
-  #include "MS5803_14BA.h"
-  #include <Wire.h> //required to force the Arduino IDE to include the library in the path for the I2C code
-  #include <SPI.h> //required to force the Arduino IDE to include the library in the path for the SPI code
-  MS5803_14BA DeapthSensor;
-#endif
-
-
 Command cmd;
 
 volatile byte wdt_resets = 0; //watchdog resets
@@ -95,15 +61,17 @@ Timer Output100ms;
 int loops_per_sec;
 
 void setup(){
-  disableWatchdog();
-  enableWatchdog();
   Serial.begin(115200);
+  
+
+  //disableWatchdog();
+  //enableWatchdog();
   //watchdogOn();
 
-  check = EEPROM.read(0);
+  //check = EEPROM.read(0);
   
   // if the watchdog triggered and the ISR completed, the first EEPROM byte will be a "1"
-  if(check == 1)
+  /*if(check == 1)
   {
     wdt_resets = EEPROM.read(1);
     EEPROM.write(0,0); // reset byte so the EEPROM is not read on next startup
@@ -111,18 +79,21 @@ void setup(){
     Serial.print("log:");
     Serial.println(wdt_resets);
     Serial.print(';');
-  }
+  }*/
   
   pinMode(13, OUTPUT);
+  
   Output1000ms.reset();
   Output100ms.reset();
   
-  DeviceManager::doDeviceSetups();
+ DeviceManager::doDeviceSetups();
 }
 
 
 void loop(){
-  wdt_reset();
+  Serial.println('FFFFFFooo');
+  
+  //wdt_reset();
   cmd.get();
   
   DeviceManager::doDeviceLoops(cmd);

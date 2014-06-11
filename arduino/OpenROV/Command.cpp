@@ -7,7 +7,7 @@
  static boolean commandReady = false;
  const char endChar = ';'; // or '!', or whatever your end character is
  static boolean storeString = false; //This will be our flag to put the data in our buffer
- static InternalCommand internalCommandBuffer[MAX_COMMANDS];
+ static InternalCommand internalCommandBuffer[1];
  static int internalCommandBuffer_head =0;
  static int internalCommandBuffer_tail =0; 
 
