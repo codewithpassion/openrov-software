@@ -105,6 +105,7 @@ io.sockets.on('connection', function (socket) {
         controller.sendMotorTest(controls.port, controls.starbord, controls.vertical);
     });
     socket.on('control_update', function(controls) {
+console.log("####################" + controls.lift);
         controller.sendCommand(controls.throttle, controls.yaw, controls.lift);
     });
 

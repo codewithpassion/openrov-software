@@ -136,7 +136,7 @@ var OpenROVController = function (eventLoop) {
   };
   controller.notSafeToControl = function () {
     //Arduino is OK to accept commands
-    if (this.ArduinoFirmwareVersion >= 0.20130314034859)
+    //if (this.ArduinoFirmwareVersion >= 0.20130314034859)
       return false;
     if (this.Capabilities != 0)
       return false;

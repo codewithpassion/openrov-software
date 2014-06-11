@@ -19,8 +19,8 @@
 // used instead.
 
 #if !defined(HAS_STD_CAPE) && !defined(HAS_OROV_CONTROLLERBOARD_25)
-#define HAS_STD_CAPE (0)
-#define HAS_OROV_CONTROLLERBOARD_25 (1)
+#define HAS_STD_CAPE (1)
+#define HAS_OROV_CONTROLLERBOARD_25 (0)
 #endif
 
 #define HAS_STD_LIGHTS (1)

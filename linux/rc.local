@@ -41,5 +41,6 @@ echo BB-SPI0DEV > $CAPEMGR/slots
 #auto detect configuration and update environment settings
 . /opt/openrov/linux/system-detect.sh || /bin/true
 
+sudo /opt/openrov/linux/reset.sh
 exit 0
 
