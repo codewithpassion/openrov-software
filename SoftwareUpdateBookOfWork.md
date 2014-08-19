@@ -25,3 +25,5 @@ Details could contain:
 - IP address
 - location via IP geolocation or location api
 - Serial number of the ROV
+
+The system shall include a means to analyze the data.
