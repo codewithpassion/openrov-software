@@ -7,7 +7,7 @@
     var rov = this;
     // Instance variables
     rov.cockpit = cockpit;
-    rov.power = 0.1;
+    rov.power = 0.25;
     //default to mid power
     rov.vtrim = 0;
     //default to no trim
@@ -18,7 +18,9 @@
     rov.positions = {
       throttle: 0,
       yaw: 0,
-      lift: 0
+      lift: 0,
+      pitch: 0,
+      roll: 0
     };
     rov.sendUpdateEnabled = true;
     var SAMPLE_PERIOD = 1000 / CONFIG.sample_freq;
@@ -442,6 +444,24 @@
     rov.cockpit.on('rovpilot.setLift', function (v) {
       rov.setLift(v);
     });
+    rov.cockpit.on('rovpilot.setPitch', function (v) {
+      rov.setPitch(v);
+    });
+    rov.cockpit.on('rovpilot.setPitchControl', function (v) {
+      rov.setPitchControl(v);
+    });
+    rov.cockpit.on('rovpilot.setRoll', function (v) {
+      rov.setRoll(v);
+    });
+    rov.cockpit.on('rovpilot.setRollControl', function (v) {
+      rov.setRollControl(v);
+    });
+    rov.cockpit.on('rovpilot.setPortElevonControl', function (v) {
+      rov.setPortElevonControl(v);
+    });
+    rov.cockpit.on('rovpilot.setStartboardElevonControl', function (v) {
+      rov.setStartboardElevonControl(v);
+    });
     rov.cockpit.on('rovpilot.powerLevel', function (v) {
       rov.powerLevel(v);
     });
@@ -604,6 +624,13 @@
   ROVpilot.prototype.setYaw = function setYaw(value) {
     this.positions.yaw = value;
   };
+  ROVpilot.prototype.setPitchControl = function setPitchControl(value) {
+    this.positions.pitch = value;
+  };
+  ROVpilot.prototype.setRollControl = function setRollControl(value) {
+    this.positions.roll = value;
+  };
+
   ROVpilot.prototype.incrimentPowerLevel = function incrimentPowerLevel() {
     var currentPowerLevel = this.bindingModel.thrustfactor();
     currentPowerLevel++;
@@ -615,16 +642,16 @@
 
     switch (value) {
       case 1:
-        this.power = 0.05;
+        this.power = 0.12;
         break;
       case 2:
-        this.power = 0.1;
+        this.power = 0.25;
         break;
       case 3:
-        this.power = 0.2;
+        this.power = 0.40;
         break;
       case 4:
-        this.power = 0.5;
+        this.power = 0.70;
         break;
       case 5:
         this.power = 1;
@@ -638,6 +665,8 @@
     this.positions.throttle = 0;
     this.positions.yaw = 0;
     this.positions.lift = 0;
+    this.positions.pitch = 0;
+    this.positions.roll = 0;
   };
   ROVpilot.prototype.sendPilotingData = function sendPilotingData() {
     var positions = this.positions;
@@ -646,7 +675,10 @@
     var controls = {};
     controls.throttle = positions.throttle * this.power;
     controls.yaw = positions.yaw * this.power * 1.5;
+    controls.yaw = Math.min(Math.max(controls.yaw, -1), 1);
     controls.lift = positions.lift * this.power;
+    controls.pitch = positions.pitch;
+    controls.roll = positions.roll;
     for (var i in positions) {
       if (controls[i] != this.priorControls[i]) {
         updateRequired = true;
@@ -654,7 +686,12 @@
     }
     if (this.sendUpdateEnabled && updateRequired || this.sendToROVEnabled === false) {
       if (this.sendToROVEnabled) {
-        this.cockpit.socket.emit('control_update', controls);
+//        this.cockpit.socket.emit('control_update', controls);
+        for(var control in controls){
+          if(controls[control] != this.priorControls[control]){
+            this.cockpit.socket.emit(control, controls[control]);
+          }
+        }
       }
       this.cockpit.emit('rovpilot.control_update', controls);
       this.priorControls = controls;

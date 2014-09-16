@@ -32,7 +32,7 @@
         history: 20
       });
       self.meter.hide();
-      $('#footercontent').append('<span id=\'fpsmeter2\'></span>');
+      $('#footercontent').append('<span class=\'pull-left\' id=\'fpsmeter2\'></span>');
       self.beagletoBrowserMeter = new FPSMeter($('#fpsmeter2')[0], {
         interval: 1000,
         smoothing: 20,
@@ -69,6 +69,7 @@
       setInterval(function () {
         _self.meter.tick();
       }, 32);
+      //This is now also used for the deadman switch.
       setInterval(function () {
         var _starttime = new Date();
         _self.beagletoBrowserMeter.tickStart();
